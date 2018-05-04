@@ -1,11 +1,6 @@
 <?php
-	define('USERNAME', 'PierreLeroy');
-	define('PASSWORD', 'football53prose');
-	define('PATH_TO_SVN', '~/Documents/ESEO/proSE/se2019-equipea2');
-	define('NAME', 'Pierre Leroy');
-	define('WIKI_NAME', 'Pierre_LEROY');
-
 	require_once __DIR__.'/vendor/autoload.php';
+	require_once('consts.php');
 
 	$client = new Redmine\Client('http://prose.eseo.fr/redmine/', USERNAME, PASSWORD);
 	$time = $client->time_entry->all(['user_id' => 515, 'limit'=>1000])['time_entries'];
