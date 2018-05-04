@@ -1,4 +1,4 @@
-First update those in *doMyWiki.php* :
+First update those in *consts.php* :
 
 - PATH_TO_SVN: the local path to svn (/home/...)
 - USERNAME: obvious
