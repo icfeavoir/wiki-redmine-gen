@@ -26,7 +26,7 @@
 		// get the parent issue
 		while($parentId != null){
 			// if parent exists and parent is not V1 (not precise enough)
-			if(isset($allIssues[$parentId]['parent']['id']) && $allIssues[$parentId]['parent']['id'] != 29074){
+			if(isset($allIssues[$parentId]['parent']['id']) && !in_array($allIssues[$parentId]['parent']['id'], $parentToIgnore)){
 				$parentId = $allIssues[$parentId]['parent']['id'];
 			}else{
 				break;

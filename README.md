@@ -5,6 +5,7 @@ First update those in *consts.php* :
 - PASSWORD: obvious
 - NAME: will be writtent at the top of your wiki
 - WIKI_NAME: the file to update on redmine
+- parentToIgnore: array for the parents that aren't useful (children will be saved anyway)
 
 Then install dependencies:
 >php composer.phar install
