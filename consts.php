@@ -2,6 +2,7 @@
 	define('USERNAME', '');
 	define('PASSWORD', '');
 	define('PATH_TO_SVN', '');
+	define('USER_ID', '');
 	define('NAME', '');
 	define('WIKI_NAME', '');
 

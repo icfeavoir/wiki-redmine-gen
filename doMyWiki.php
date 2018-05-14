@@ -3,7 +3,7 @@
 	require_once('consts.php');
 
 	$client = new Redmine\Client('http://prose.eseo.fr/redmine/', USERNAME, PASSWORD);
-	$time = $client->time_entry->all(['user_id' => 515, 'limit'=>1000])['time_entries'];
+	$time = $client->time_entry->all(['user_id' => USER_ID, 'limit'=>1000])['time_entries'];
 	$allIssues = array();
 	$allOpenedIssues = $client->issue->all(['limit' => 1000, 'status_id'=>'open'])['issues'];
 	$allClosedIssues = $client->issue->all(['limit' => 1000, 'status_id'=>'closed'])['issues'];
@@ -53,7 +53,7 @@
 
 	// GET ALL COMMITS (already  ranged by order desc)
 	$issueToLastCommit = array();
-	chdir('/home/pierre/Documents/ESEO/proSE/se2019-equipea2');
+	chdir(PATH_TO_SVN);
 	$commits = shell_exec('svn log --username '.USERNAME.' --password '.PASSWORD);
 	$commits = explode('------------------------------------------------------------------------', $commits);
 	foreach ($issueToTime as $issueId => $time) {
