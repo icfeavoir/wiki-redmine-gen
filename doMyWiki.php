@@ -3,16 +3,6 @@
 	require_once('consts.php');
 
 	$client = new Redmine\Client('http://prose.eseo.fr/redmine/', USERNAME, PASSWORD);
-
-	// $test = $client->time_entry->all([
-	//     'issue_id' => 30700,
-	//     'limit'=>1000,
-	// ]);
-	// ?><pre><?php
-	// print_r($test);
-	// ?></pre><?php
-	// exit;
-
 	$time = $client->time_entry->all(['user_id' => USER_ID, 'limit'=>1000])['time_entries'];
 	$allIssues = array();
 	$allOpenedIssues = $client->issue->all(['limit' => 1000, 'status_id'=>'open'])['issues'];
@@ -27,11 +17,29 @@
 	}
 
 	$issueToTime = array();
+	$issueToTotalTime = array();
+	$issueToCollaborater = array();
 	$issueToDate = array();
 	$parentToIssueId = array();
 	$parentToSumTime = array();
 
 	foreach ($time as $uniqueTime) {
+		// sum the time for this issue
+		$allLoggedTimes = $client->time_entry->all([
+		    'issue_id' => $uniqueTime['issue']['id'],
+		    'limit'=>1000,
+		]);
+		$issueToTotalTime[$uniqueTime['issue']['id']] = 0;
+		$issueToCollaborater[$uniqueTime['issue']['id']] = array();
+		foreach ($allLoggedTimes['time_entries'] as $value) {
+			$issueToTotalTime[$uniqueTime['issue']['id']] = $issueToTotalTime[$uniqueTime['issue']['id']]+$value['hours'];
+			$user = $value['user']['name'];
+			// if collab not in the array yet, we add it (not if it's me)
+			if(!in_array($user, $issueToCollaborater[$uniqueTime['issue']['id']]) && $user != NAME){
+				array_push($issueToCollaborater[$uniqueTime['issue']['id']], $user);
+			}
+		}
+
 		$parentId = $uniqueTime['issue']['id'];
 		// get the parent issue
 		while($parentId != null){
@@ -87,18 +95,31 @@
 		$myWiki .= '|_. Tâche |_. Début |_. Travail effectué |_. Temps passé |_. Pourcentage du travail effectué |_. Révision |'."\n";
 		$issueList = $parentToIssueId[$parentId];
 		foreach ($issueList as $key => $issueId) {
-			$myWiki .= '|#'.$issueId.'| '.($allIssues[$issueId]['start_date'] ?? '').' | '.$allIssues[$issueId]['subject'].' | '.$issueToTime[$issueId].'h | '.($allIssues[$issueId]['done_ratio'] ?? '').'% | '.implode(', ', $issueToCommits[$issueId])." |\n";
+			$myWiki .= 
+				'|#'.$issueId.'| '.
+				($allIssues[$issueId]['start_date'] ?? '').' | '.
+				$allIssues[$issueId]['subject'].' | '.
+				$issueToTime[$issueId].'h | '.
+				(calcRatio($issueToTime[$issueId], $issueToTotalTime[$issueId])).'% '.
+					(empty($issueToCollaborater[$issueId]) ? '' : '(').
+					implode(', ', $issueToCollaborater[$issueId]).
+					(empty($issueToCollaborater[$issueId]) ? '' : ')').'| '.
+				implode(', ', $issueToCommits[$issueId])." |\n";
 		}
 		$myWiki .= "\n\n";
 	}
 	$myWiki .= 'h2. Heures totales : '.array_sum($issueToTime).'h';
 
-	$publish = true;
-
-	if($publish){
+	if(PUBLISH){
 		$client->wiki->update('se2019-equipea2', WIKI_NAME, [
 		    'text' => $myWiki,
 		]);
+	}else{
+		echo $myWiki;
 	}
 
 	echo "[WIKI DONE]\n";
+
+	function calcRatio($my, $all){
+		return round($my*100/$all);
+	}
