@@ -11,9 +11,13 @@ First update those in *consts.php* :
 - parentToIgnore: array for the parents that aren't useful (children will be saved anyway)
 
 Needed
-> php7.*
+> php7.* : sudo apt-get install php
+
 > php7-simplexml
+
 > php7-curl
+
+> install all important php packages : sudo apt-get install php-pear php7.0-dev php7.0-zip php7.0-curl php7.0-gd php7.0-mysql php7.0-mcrypt php7.0-xml libapache2-mod-php7.0
 
 Then install dependencies:
 >php composer.phar install
