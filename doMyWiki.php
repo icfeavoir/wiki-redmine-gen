@@ -3,6 +3,16 @@
 	require_once('consts.php');
 
 	$client = new Redmine\Client('http://prose.eseo.fr/redmine/', USERNAME, PASSWORD);
+
+	// $test = $client->time_entry->all([
+	//     'issue_id' => 30700,
+	//     'limit'=>1000,
+	// ]);
+	// ?><pre><?php
+	// print_r($test);
+	// ?></pre><?php
+	// exit;
+
 	$time = $client->time_entry->all(['user_id' => USER_ID, 'limit'=>1000])['time_entries'];
 	$allIssues = array();
 	$allOpenedIssues = $client->issue->all(['limit' => 1000, 'status_id'=>'open'])['issues'];
@@ -25,7 +35,7 @@
 		$parentId = $uniqueTime['issue']['id'];
 		// get the parent issue
 		while($parentId != null){
-			// if parent exists and parent is not V1 (not precise enough)
+			// if parent exists and parent is in the not "not parent" list (not precise enough)
 			if(isset($allIssues[$parentId]['parent']['id']) && !in_array($allIssues[$parentId]['parent']['id'], $parentToIgnore)){
 				$parentId = $allIssues[$parentId]['parent']['id'];
 			}else{
@@ -52,35 +62,43 @@
 	}
 
 	// GET ALL COMMITS (already  ranged by order desc)
-	$issueToLastCommit = array();
+	$issueToCommits = array();
 	chdir(PATH_TO_SVN);
-	$commits = shell_exec('svn log --username '.USERNAME.' --password '.PASSWORD);
+	$commits = shell_exec('svn log --username '.USERNAME.' --password '.PASSWORD.' --search '.USERNAME);
 	$commits = explode('------------------------------------------------------------------------', $commits);
 	foreach ($issueToTime as $issueId => $time) {
-		$issueToLastCommit[$issueId] = '';
+		$issueToCommits[$issueId] = array();
 		foreach ($commits as $commit) {
 			if(strpos($commit, '#'.$issueId)){
-				$issueToLastCommit[$issueId] = explode(' ', $commit)[0];
-				break;
+				$commitNumber = preg_replace("/[^A-Za-z0-9 ]/", "", explode(' ', $commit)[0]);
+				// we add a coma only if not the first one
+				array_push($issueToCommits[$issueId], $commitNumber);
 			}
 		}
 	}
 
-	$myWiki = '';
+	// most important first
+	arsort($parentToSumTime);
 
+	$myWiki = '';
 	$myWiki .= 'h2. '.NAME."\n\n";	
-	foreach ($parentToIssueId as $parentId => $issueList) {
-		$myWiki .= '> h3. '.$allIssues[$parentId]['subject'].' : '.$parentToSumTime[$parentId]."h\n\n";
-		$myWiki .= '|_. Tâche |_. Date|_. Échéance |_. Travail effectué |_. Temps passé |_. Pourcentage du travail effectué |_. Révision |'."\n";
+	foreach ($parentToSumTime as $parentId => $totalTime) {
+		$myWiki .= '> h3. '.$allIssues[$parentId]['subject'].' : '.$totalTime."h\n\n";
+		$myWiki .= '|_. Tâche |_. Début |_. Travail effectué |_. Temps passé |_. Pourcentage du travail effectué |_. Révision |'."\n";
+		$issueList = $parentToIssueId[$parentId];
 		foreach ($issueList as $key => $issueId) {
-			$myWiki .= '|#'.$issueId.'| '.($allIssues[$issueId]['start_date'] ?? '').' | '.($allIssues[$issueId]['due_date'] ?? '').' | '.$allIssues[$issueId]['subject'].' | '.$issueToTime[$issueId].'h | '.($allIssues[$issueId]['done_ratio'] ?? '').'% | '.$issueToLastCommit[$issueId]." |\n";
+			$myWiki .= '|#'.$issueId.'| '.($allIssues[$issueId]['start_date'] ?? '').' | '.$allIssues[$issueId]['subject'].' | '.$issueToTime[$issueId].'h | '.($allIssues[$issueId]['done_ratio'] ?? '').'% | '.implode(', ', $issueToCommits[$issueId])." |\n";
 		}
 		$myWiki .= "\n\n";
 	}
 	$myWiki .= 'h2. Heures totales : '.array_sum($issueToTime).'h';
 
-	$client->wiki->update('se2019-equipea2', WIKI_NAME, [
-	    'text' => $myWiki,
-	]);
+	$publish = true;
+
+	if($publish){
+		$client->wiki->update('se2019-equipea2', WIKI_NAME, [
+		    'text' => $myWiki,
+		]);
+	}
 
 	echo "[WIKI DONE]\n";
