@@ -13,6 +13,7 @@ First update those in *consts.php* :
 
 Needed
 > php7.*
+
 **sudo apt-get install php**
 
 > php7-simplexml
@@ -20,6 +21,7 @@ Needed
 > php7-curl
 
 > install all important php packages
+
 **sudo apt-get install php7.0-dev php7.0-curl php7.0-xml**
 
 >Then install dependencies:
@@ -31,10 +33,14 @@ Finally run it on browser or in terminal:
 The file will be automatically generated on redmine if PUBLISH is set to true. It could take some time (around 1 minute).
 
 If you think that it is not precise enough, don't forget to add parent issues to **parentToIgnore** like this :
+```php
 $parentToIgnore = array(12345, 1020, 5602);
+```
 Then issues 12345, 1020 and 5602 will be exploded (only their child will be considered as parent issues).
 
 You can create you own parent issues if you want to group some parents with **parentToCreate**. For example if you want to group all issues child of 1234 and all issues child of 7890, you can do :
+``` php
 parentToCreate = array(
   'Others'=>array(1234, 7890),
 );
+```
