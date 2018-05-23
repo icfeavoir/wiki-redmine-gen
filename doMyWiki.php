@@ -155,7 +155,8 @@
 		echo $myWiki;
 	}
 
-	echo "<br><br>---------------------WARNINGS------------------------<br><br>".implode("\n", $warnings);
+	if(!empty($warnings))
+		echo "<br><br>---------------------WARNINGS------------------------<br><br>".implode("\n", $warnings);
 
 	function calcRatio($my, $all){
 		return round($my*100/$all);
