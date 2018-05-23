@@ -1,4 +1,6 @@
 <?php
+	$warnings = array();
+
 	require_once __DIR__.'/vendor/autoload.php';
 	require_once('consts.php');
 
@@ -88,12 +90,46 @@
 	// most important first
 	arsort($parentToSumTime);
 
+	// now we handle the parentToCreate array
+	$parentToCreateId = 0;
+	foreach ($parentToCreate as $parentToCreateName => $parentIssues) {
+		// we go negative to be sure that we don't use an existing ID
+		$parentToCreateId--;
+
+		$parentToIssueId[$parentToCreateId] = array();
+		$parentToCreateTime = 0;
+		foreach ($parentIssues as $issueToGroup) {
+			// if issueToGroup in not a parent, we ignore it (bug !)
+			if(!array_key_exists($issueToGroup, $parentToSumTime)){
+				array_push($warnings, 'Issue '.$issueToGroup.' is not a parent issue');
+				break;
+			}
+
+			// sum times
+			$parentToCreateTime = $parentToCreateTime + $parentToSumTime[$issueToGroup];
+			
+			// add all of it to created issues
+			foreach ($parentToIssueId[$issueToGroup] as $key => $child) {
+				array_push($parentToIssueId[$parentToCreateId], $child);
+			}
+			
+			// finally remove from lists
+			unset($parentToSumTime[$issueToGroup]);
+			unset($parentToIssueId[$issueToGroup]);
+		}
+		$parentToSumTime[$parentToCreateId] = $parentToCreateTime;
+
+		// create the fake parent issue
+		$allIssues[$parentToCreateId] = array();
+		$allIssues[$parentToCreateId]['subject'] = $parentToCreateName;
+	}
+
 	$myWiki = '';
 	$myWiki .= 'h2. '.NAME."\n\n";	
 	foreach ($parentToSumTime as $parentId => $totalTime) {
 		$myWiki .= '> h3. '.$allIssues[$parentId]['subject'].' : '.$totalTime."h\n\n";
 		$myWiki .= '|_. Tâche |_. Début |_. Travail effectué |_. Temps passé |_. Pourcentage du travail effectué |_. Révision |'."\n";
-		$issueList = $parentToIssueId[$parentId];
+		$issueList = $parentToIssueId[$parentId] ?? [];	// security for bugs
 		foreach ($issueList as $key => $issueId) {
 			$myWiki .= 
 				'|#'.$issueId.'| '.
@@ -114,11 +150,12 @@
 		$client->wiki->update('se2019-equipea2', WIKI_NAME, [
 		    'text' => $myWiki,
 		]);
+		echo "[WIKI DONE]\n";
 	}else{
 		echo $myWiki;
 	}
 
-	echo "[WIKI DONE]\n";
+	echo "<br><br>---------------------WARNINGS------------------------<br><br>".implode("\n", $warnings);
 
 	function calcRatio($my, $all){
 		return round($my*100/$all);
