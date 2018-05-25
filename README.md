@@ -46,12 +46,12 @@ Les valeurs du fichier *consts.php* doivent être modifiées. Voici la liste ain
 
 #### 3. Génération du Wiki
 
-Voici la commande a effectuer :
+Voici la commande à effectuer :
 
 > **php doMyWiki.php**
 
 Le fichier sera automatiquement publié sur Redmine si la constante *PUBLISH* est *true*. Cela peut prendre du temps en fonction de la connexion internet (moins d'une minute normalement).
-Le commande a fonctionné si le résultat affiche *[WIKI DONE]*. Certains warnings peuvent apparaître mais n'empêchent pas le wiki de se générer.
+Le commande a fonctionné si le résultat affiche *[WIKI DONE]*. Certains warnings peuvent apparaître mais n'empêchent pas le wiki d'être généré.
 
 #### 4. Exemples
 
