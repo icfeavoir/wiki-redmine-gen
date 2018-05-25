@@ -3,6 +3,7 @@
 	define('PASSWORD', '');
 	define('PATH_TO_SVN', '');
 	define('USER_ID', '');
+	define('PROJECT_ID', '');
 	define('NAME', '');
 	define('WIKI_NAME', '');
 	define('PUBLISH', false);
