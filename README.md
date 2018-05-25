@@ -60,7 +60,7 @@ Exemple d'utilisation de *parentToIgnore* pour rediviser une tâche :
 ```php
 $parentToIgnore = array(12345, 1020, 5602);
 ```
-Les tâches 12345, 1020 et 5602 seront divisés et leurs tâches filles directent seront considérées comme tâches parentes.
+Les tâches 12345, 1020 et 5602 seront divisées et leurs tâches filles directes (tâches filles qui sont directement sous les tâches 12345, 1020 et 5602) seront considérées comme tâches parentes.
 
 Exemple d'utilisation de *parentToCreate*.
 ``` php
@@ -68,4 +68,4 @@ parentToCreate = array(
   'Autres'=>array(1234, 7890),
 );
 ``` 
-Voici un exemple si vous voulez regrouper toutes les tâches 1234 et 7890, ainsi que leurs sous-tâches dans une nouvelle tâches nommées *Autres*.
+Voici un exemple si vous voulez regrouper toutes les tâches 1234 et 7890, ainsi que leurs sous-tâches dans une nouvelle tâche nommée *Autres*.
