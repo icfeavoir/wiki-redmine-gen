@@ -4,6 +4,7 @@
 > php7.*
 
 Pour savoir la version utilisée : **php −−version**
+
 Pour installer php : **sudo apt-get install php**
 
 > php7-simplexml
@@ -45,9 +46,12 @@ Les valeurs du fichier *consts.php* doivent être modifiées. Voici la liste ain
 
 #### 3. Génération du Wiki
 
-**php doMyWiki.php**
+Voici la commande a effectuer :
+
+> **php doMyWiki.php**
 
 Le fichier sera automatiquement publié sur Redmine si la constante *PUBLISH* est *true*. Cela peut prendre du temps en fonction de la connexion internet (moins d'une minute normalement).
+Le commande a fonctionné si le résultat affiche *[WIKI DONE]*. Certains warnings peuvent apparaître mais n'empêchent pas le wiki de se générer.
 
 #### 4. Exemples
 
