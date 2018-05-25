@@ -7,8 +7,8 @@
 	$client = new Redmine\Client('http://prose.eseo.fr/redmine/', USERNAME, PASSWORD);
 	$time = $client->time_entry->all(['user_id' => USER_ID, 'limit'=>1000])['time_entries'];
 	$allIssues = array();
-	$allOpenedIssues = $client->issue->all(['limit' => 1000, 'status_id'=>'open'])['issues'];
-	$allClosedIssues = $client->issue->all(['limit' => 1000, 'status_id'=>'closed'])['issues'];
+	$allOpenedIssues = $client->issue->all(['project_id'=>PROJECT_ID, 'limit' => 1000, 'status_id'=>'open'])['issues'];
+	$allClosedIssues = $client->issue->all(['project_id'=>PROJECT_ID, 'limit' => 1000, 'status_id'=>'closed'])['issues'];
 
 	// range
 	foreach ($allOpenedIssues as $key => $issue) {
