@@ -1,46 +1,67 @@
-First update those in *consts.php* :
+**Wiki-redmine-gen** a été développé dans le but de simplifier la création des Wiki dans le contexte du ProSE. Il est réalisé en PHP.
 
-- PATH_TO_SVN: the local path to svn (/home/...)
-- USERNAME: obvious
-- PASSWORD: obvious
-- USER_ID : your user_id - number (you can find it in the URL on your personnal redmine account);
-- NAME: will be writtent at the top of your wiki
-- WIKI_NAME: the file to update on redmine
-- PUBLISH: true if you want the generator to publish directly on redmine, false if you want to get the output without publishing.
-
-- parentToIgnore: array for the parents that aren't useful (children will be saved anyway)
-- parentToCreate: array of parents to create (with list of existing parent inside)
-
-Needed
+### Exigences
 > php7.*
 
-**sudo apt-get install php**
+Pour savoir la version utilisée : **php −−version**
+Pour installer php : **sudo apt-get install php**
 
 > php7-simplexml
 
 > php7-curl
 
-> install all important php packages
+Pour installer les packages importants : **sudo apt-get install php7.0-dev php7.0-curl php7.0-xml**
 
-**sudo apt-get install php7.0-dev php7.0-curl php7.0-xml**
+### Concernant votre projet
 
->Then install dependencies:
-**php composer.phar install**
+Vos commits doivent contenir le nom de la tâche associée précédé d'un "#", par exemple #1234.
 
-Finally run it on browser or in terminal:
+Seules les tâches dans lesquelles vous avez loggué du temps seront affichées.
+
+Le pourcentage effectué pour une tâche est calculé à partir du ratio de votre nombre d'heures loggués pour cette tâche par le nombre total d'heures loggués pour cette tâche.
+
+Si votre dépôt local n'est pas à jour, il se peut que certaines références vers des commits ne soient pas pris en compte.
+
+### Utilisation de wiki-redmine-gen
+#### 1. Installation des dépendances
+Après avoir téléchargé le projet, il faut installer les dépendances nécessaires : **php composer.phar install**
+
+Cette commande doit être executée dans le dossier contenant le projet et ne doit pas retourner d'erreur.
+
+#### 2. Modification des constantes
+
+Les valeurs du fichier *consts.php* doivent être modifiées. Voici la liste ainsi que leur signification :
+
+- PATH_TO_SVN: le chemin local vers votre svn (/home/...)
+- USERNAME: votre nom d'utilisateur Redmine
+- PASSWORD: votre mot de passe Redmine
+- USER_ID : votre numéro d'utilisateur redmine. Pour le connaître, allez sur Redmine puis cliquez sur **Connecté en tant que ...**. Votre id est présent dans l'url indiqué (.../redmine/user/[id])
+- NAME: le nom qui sera affiché en haut de votre wiki. Vous pouvez mettre ce que vous voulez ici
+- WIKI_NAME: le nom du fichier de votre wiki. Pour le connaître, allez sur votre wiki et récupérez le nom dans l'url (par exemplle Prenom_NOM)
+- PUBLISH: Mettez *true* si vous voulez le wiki directement publié sur Redmine, *false* si vous voulez récupérer le wiki générer.
+
+- parentToIgnore: liste de tous les parents à ignorer. Le générateur va regrouper les tâches par tâche parente. Si une tâche parente est trop "vaste" et que vous voulez la rediviser, vous pouvez l'ajouter ici (exemple plus bas)
+- parentToCreate: liste des parents à créer, contenant eux-même une liste de parents à leur ajouter (exemple plus bas)
+
+#### 3. Génération du Wiki
+
 **php doMyWiki.php**
 
-The file will be automatically generated on redmine if PUBLISH is set to true. It could take some time (around 1 minute).
+Le fichier sera automatiquement publié sur Redmine si la constante *PUBLISH* est *true*. Cela peut prendre du temps en fonction de la connexion internet (moins d'une minute normalement).
 
-If you think that it is not precise enough, don't forget to add parent issues to **parentToIgnore** like this :
+#### 4. Exemples
+
+Exemple d'utilisation de *parentToIgnore* pour rediviser une tâche :
+
 ```php
 $parentToIgnore = array(12345, 1020, 5602);
 ```
-Then issues 12345, 1020 and 5602 will be exploded (only their child will be considered as parent issues).
+Les tâches 12345, 1020 et 5602 seront divisés et leurs tâches filles directent seront considérées comme tâches parentes.
 
-You can create you own parent issues if you want to group some parents with **parentToCreate**. For example if you want to group all issues child of 1234 and all issues child of 7890, you can do :
+Exemple d'utilisation de *parentToCreate*.
 ``` php
 parentToCreate = array(
-  'Others'=>array(1234, 7890),
+  'Autres'=>array(1234, 7890),
 );
-```
+``` 
+Voici un exemple si vous voulez regrouper toutes les tâches 1234 et 7890, ainsi que leurs sous-tâches dans une nouvelle tâches nommées *Autres*.
