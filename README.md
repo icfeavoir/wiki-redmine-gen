@@ -37,6 +37,7 @@ Les valeurs du fichier *consts.php* doivent être modifiées. Voici la liste ain
 - USERNAME: votre nom d'utilisateur Redmine
 - PASSWORD: votre mot de passe Redmine
 - USER_ID : votre numéro d'utilisateur redmine. Pour le connaître, allez sur Redmine puis cliquez sur **Connecté en tant que ...**. Votre id est présent dans l'url indiqué (.../redmine/user/[id])
+- PROJECT_ID : l'id du projet (utile pour les redoublants). Pour le connaître, prenez la fin de l'url de l'onglet *Aperçu*
 - NAME: le nom qui sera affiché en haut de votre wiki. Vous pouvez mettre ce que vous voulez ici
 - WIKI_NAME: le nom du fichier de votre wiki. Pour le connaître, allez sur votre wiki et récupérez le nom dans l'url (par exemplle Prenom_NOM)
 - PUBLISH: Mettez *true* si vous voulez le wiki directement publié sur Redmine, *false* si vous voulez récupérer le wiki générer.
