@@ -35,9 +35,9 @@
 		$issueToCollaborater[$uniqueTime['issue']['id']] = array();
 		foreach ($allLoggedTimes['time_entries'] as $value) {
 			$issueToTotalTime[$uniqueTime['issue']['id']] = $issueToTotalTime[$uniqueTime['issue']['id']]+$value['hours'];
-			$user = $value['user']['name'];
+			$user = $value['user']['id'];
 			// if collab not in the array yet, we add it (not if it's me)
-			if(!in_array($user, $issueToCollaborater[$uniqueTime['issue']['id']]) && $user != NAME){
+			if(!in_array($user, $issueToCollaborater[$uniqueTime['issue']['id']]) && $user != USER_ID){
 				array_push($issueToCollaborater[$uniqueTime['issue']['id']], $user);
 			}
 		}
