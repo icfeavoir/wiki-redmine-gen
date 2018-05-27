@@ -18,6 +18,7 @@
 		$allIssues[$issue['id']] = $issue;
 	}
 
+	$idToUser = array();
 	$issueToTime = array();
 	$issueToTotalTime = array();
 	$issueToCollaborater = array();
@@ -35,12 +36,18 @@
 		$issueToCollaborater[$uniqueTime['issue']['id']] = array();
 		foreach ($allLoggedTimes['time_entries'] as $value) {
 			$issueToTotalTime[$uniqueTime['issue']['id']] = $issueToTotalTime[$uniqueTime['issue']['id']]+$value['hours'];
-			$user = $value['user']['id'];
+			$user_id = $value['user']['id'];
+			$user_name = $value['user']['name'];
 			// if collab not in the array yet, we add it (not if it's me)
-			if(!in_array($user, $issueToCollaborater[$uniqueTime['issue']['id']]) && $user != USER_ID){
-				array_push($issueToCollaborater[$uniqueTime['issue']['id']], $user);
+			if(!in_array($user_id, $issueToCollaborater[$uniqueTime['issue']['id']]) && $user_id != USER_ID){
+				array_push($issueToCollaborater[$uniqueTime['issue']['id']], $user_id);
+				$idToUser[$user_id] = $user_name;
 			}
 		}
+		// we change the id by the name in the issueToColab array
+		array_walk($issueToCollaborater[$uniqueTime['issue']['id']], function(&$value, $key, $arrForName){
+		    $value = $arrForName[$value];
+		}, $idToUser);
 
 		$parentId = $uniqueTime['issue']['id'];
 		// get the parent issue
