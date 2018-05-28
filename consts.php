@@ -2,6 +2,9 @@
 	define('USERNAME', '');
 	define('PASSWORD', '');
 	define('PATH_TO_SVN', '');
+	define('MAX_COMMITS', 1000);
+	define('MAX_ISSUES', 1000);
+	define('MAX_TIME_ENTRIES', 1000);
 	define('USER_ID', '');
 	define('PROJECT_ID', '');
 	define('NAME', '');
