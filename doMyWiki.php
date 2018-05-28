@@ -5,10 +5,10 @@
 	require_once('consts.php');
 
 	$client = new Redmine\Client('http://prose.eseo.fr/redmine/', USERNAME, PASSWORD);
-	$time = $client->time_entry->all(['user_id' => USER_ID, 'limit'=>1000])['time_entries'];
+	$time = $client->time_entry->all(['user_id' => USER_ID, 'limit'=>MAX_TIME_ENTRIES])['time_entries'];
 	$allIssues = array();
-	$allOpenedIssues = $client->issue->all(['project_id'=>PROJECT_ID, 'limit' => 1000, 'status_id'=>'open'])['issues'];
-	$allClosedIssues = $client->issue->all(['project_id'=>PROJECT_ID, 'limit' => 1000, 'status_id'=>'closed'])['issues'];
+	$allOpenedIssues = $client->issue->all(['project_id'=>PROJECT_ID, 'limit' => MAX_ISSUES, 'status_id'=>'open'])['issues'];
+	$allClosedIssues = $client->issue->all(['project_id'=>PROJECT_ID, 'limit' => MAX_ISSUES, 'status_id'=>'closed'])['issues'];
 
 	// range
 	foreach ($allOpenedIssues as $key => $issue) {
@@ -30,7 +30,7 @@
 		// sum the time for this issue
 		$allLoggedTimes = $client->time_entry->all([
 		    'issue_id' => $uniqueTime['issue']['id'],
-		    'limit'=>1000,
+		    'limit'=>MAX_TIME_ENTRIES,
 		]);
 		$issueToTotalTime[$uniqueTime['issue']['id']] = 0;
 		$issueToCollaborater[$uniqueTime['issue']['id']] = array();
