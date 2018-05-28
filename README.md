@@ -34,6 +34,9 @@ Cette commande doit être executée dans le dossier contenant le projet et ne do
 Les valeurs du fichier *consts.php* doivent être modifiées. Voici la liste ainsi que leur signification :
 
 - PATH_TO_SVN: le chemin local vers votre svn (/home/...)
+- MAX_COMMITS: le nombre maximal de commits (vous pouvez laisser la valeur par défaut qui est 1000 ou, dans le cas où vous avez plus de commits, mettre une valeur plus grande).
+- MAX_ISSUES: le nombre maximal de demandes sur Redmine (vous pouvez laisser la valeur par défaut qui est 1000 ou, dans le cas où vous avez plus de demandes, mettre une valeur plus grande).
+- MAX_TIME_ENTRIES: le nombre maximal d'heures logguées (vous pouvez laisser la valeur par défaut qui est 1000 ou, dans le cas où vous avez plus d'heures logguées, mettre une valeur plus grande).
 - USERNAME: votre nom d'utilisateur Redmine
 - PASSWORD: votre mot de passe Redmine
 - USER_ID : votre numéro d'utilisateur redmine. Pour le connaître, allez sur Redmine puis cliquez sur **Connecté en tant que ...**. Votre id est présent dans l'url indiqué (.../redmine/user/[id])
